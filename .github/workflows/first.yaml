@@ -1,10 +1,23 @@
-name: "firstworkflow"
-on: push
+name: "Event demo1"
+on:
+  pull_request:
+    types:
+      - opened
+  workflow_dispatch:
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Run a script
-        run: echo "Running tests on ${{ github.ref }}..."
+      - name: Output event data
+        run: echo "${{ toJSON(github.event)}}"
+      - name: Get code
+        run: actions/checkout@v3
+      - name: Install dependencies
+        run: npm ci
+      - name: Test code
+        run: npm run test
+      - name: Build code
+        run: npm run build
+      - name: Deploy project
+        run: echo "Deploying"
+      
